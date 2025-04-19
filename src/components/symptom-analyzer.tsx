@@ -5,6 +5,8 @@ import {analyzeSymptoms} from '@/ai/flows/ai-symptom-analyzer';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
+import {Textarea} from '@/components/ui/textarea';
 
 export function SymptomAnalyzer() {
   const [symptoms, setSymptoms] = useState('');
@@ -42,7 +44,7 @@ export function SymptomAnalyzer() {
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
           <label htmlFor="symptoms">Symptoms</label>
-          <Input
+          <Textarea
             id="symptoms"
             value={symptoms}
             onChange={e => setSymptoms(e.target.value)}
@@ -51,7 +53,7 @@ export function SymptomAnalyzer() {
         </div>
         <div className="grid gap-2">
           <label htmlFor="medicalHistory">Medical History</label>
-          <Input
+          <Textarea
             id="medicalHistory"
             value={medicalHistory}
             onChange={e => setMedicalHistory(e.target.value)}
@@ -60,7 +62,7 @@ export function SymptomAnalyzer() {
         </div>
         <div className="grid gap-2">
           <label htmlFor="allergies">Allergies</label>
-          <Input
+          <Textarea
             id="allergies"
             value={allergies}
             onChange={e => setAllergies(e.target.value)}
@@ -70,9 +72,19 @@ export function SymptomAnalyzer() {
         <Button onClick={handleAnalyze} disabled={isLoading}>
           {isLoading ? 'Analyzing...' : 'Analyze Symptoms'}
         </Button>
+
         {results && results.conditions && (
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Potential Conditions:</h3>
+            <Alert variant="destructive">
+              <AlertTitle>AI Analysis</AlertTitle>
+              <AlertDescription>
+                This information is AI-generated and should not be considered a
+                substitute for professional medical advice.
+              </AlertDescription>
+            </Alert>
+            <h3 className="text-lg font-semibold mt-4 mb-2">
+              Potential Conditions:
+            </h3>
             <ul>
               {results.conditions.map((condition: any, index: number) => (
                 <li key={index} className="mb-2">

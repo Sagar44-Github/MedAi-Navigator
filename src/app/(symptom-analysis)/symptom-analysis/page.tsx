@@ -1,4 +1,6 @@
-import { SymptomAnalyzer } from "@/components/symptom-analyzer";
+'use client';
+
+import {SymptomAnalyzer} from '@/components/symptom-analyzer';
 
 export default function SymptomAnalysisPage() {
   return (
