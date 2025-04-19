@@ -130,7 +130,7 @@ export default function Home() {
               <Link
                 key={index}
                 href={feature.href}
-                className="bg-card rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 block"
+                className="bg-card rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 block transform hover:scale-105 hover:rotate-3"
               >
                 <feature.icon className="h-6 w-6 text-primary mb-2" />
                 <h2 className="text-lg font-semibold mb-2">{feature.name}</h2>

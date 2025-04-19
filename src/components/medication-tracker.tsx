@@ -122,7 +122,7 @@ export function MedicationTracker() {
 
   return (
     <div className="container mx-auto px-4">
-      <Card className="w-full max-w-lg mx-auto">
+      <Card className="w-full max-w-lg mx-auto hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
         <CardHeader>
           <CardTitle>Medication Tracker</CardTitle>
         </CardHeader>
@@ -188,7 +188,7 @@ export function MedicationTracker() {
                   {startDate ? format(startDate, 'PPP') : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="center" side="bottom">
+              <PopoverContent className="w-auto p-0 rounded-lg shadow-md" align="center" side="bottom">
                 <Calendar
                   mode="single"
                   selected={startDate}
@@ -200,9 +200,9 @@ export function MedicationTracker() {
             </Popover>
           </div>
           {editingId ? (
-            <Button onClick={handleUpdateMedication}>Update Medication</Button>
+            <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleUpdateMedication}>Update Medication</Button>
           ) : (
-            <Button onClick={handleAddMedication}>Add Medication</Button>
+            <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleAddMedication}>Add Medication</Button>
           )}
 
           {medications.length > 0 && (
@@ -210,7 +210,7 @@ export function MedicationTracker() {
               <h3 className="text-lg font-semibold mb-2">Medication List:</h3>
               <ul>
                 {medications.map(medication => (
-                  <li key={medication.id} className="mb-2">
+                  <li key={medication.id} className="mb-2 p-4 rounded-md shadow-sm bg-card hover:shadow-lg transition-shadow duration-300">
                     <strong>{medication.name}</strong> - {medication.dosage}
                     (Timings: {medication.timings}, After Food:{' '}
                     {medication.afterFood ? 'Yes' : 'No'}, Duration:{' '}
@@ -246,7 +246,7 @@ export function MedicationTracker() {
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
-                  </li>
+                  </div>
                 ))}
               </ul>
             </div>
