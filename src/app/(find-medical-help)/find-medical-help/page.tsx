@@ -70,11 +70,7 @@ export async function getMedicalFacilities(
 // Leaflet's default icon path is not correctly configured, leading to marker errors.
 // This workaround sets the correct paths for the marker icons.
 // More info: https://github.com/Leaflet/Leaflet/issues/4968
-function setLeafletIcon() {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
+function setLeafletIcon(L: any) {
   delete (L.Icon.Default.prototype as any)._getIconUrl;
 
   L.Icon.Default.mergeOptions({
@@ -126,20 +122,22 @@ export default function FindMedicalHelpPage() {
       return;
     }
 
-    setLeafletIcon();
-
     const initializeMap = async () => {
       if (location && mapRef.current) {
         try {
           const L = await import('leaflet') as typeof L;
-          const newMap = L.map(mapRef.current).setView([location.lat, location.lng], 12);
+					if (typeof L !== 'undefined') {
+            setLeafletIcon(L);
+            const newMap = L.map(mapRef.current).setView([location.lat, location.lng], 12);
 
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          }).addTo(newMap);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(newMap);
 
-          setMap(newMap);
+            setMap(newMap);
+          }
+
         } catch (error) {
           console.error('Failed to initialize leaflet map', error);
         }
