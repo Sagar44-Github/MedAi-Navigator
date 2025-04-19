@@ -1,19 +1,78 @@
 'use client';
 
 import {useState, useEffect, useRef} from 'react';
-import {getMedicalFacilities, MedicalFacility} from '@/services/medical-facility-locator';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {MapPin} from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import * as L from 'leaflet';
+
+/**
+ * Represents a medical facility.
+ */
+export interface MedicalFacility {
+  /**
+   * The name of the medical facility.
+   */
+  name: string;
+  /**
+   * The address of the medical facility.
+   */
+  address: string;
+  /**
+   * The phone number of the medical facility.
+   */
+  phoneNumber: string;
+  /**
+   * The rating of the medical facility.
+   */
+  rating: number;
+  /**
+   * The distance of the medical facility from the user.
+   */
+  distance: number;
+    /**
+   * The latitude of the medical facility.
+   */
+  latitude: number;
+  /**
+   * The longitude of the medical facility.
+   */
+  longitude: number;
+}
+
+/**
+ * Asynchronously retrieves a list of medical facilities near a given location.
+ *
+ * @param location The location to search near.
+ * @param specialty The specialty to filter by.
+ * @returns A promise that resolves to a list of MedicalFacility objects.
+ */
+export async function getMedicalFacilities(
+  location: { lat: number; lng: number },
+  specialty?: string
+): Promise<MedicalFacility[]> {
+  // TODO: Implement this by calling an API.
+
+  return [
+    {
+      name: 'Example Hospital',
+      address: '123 Main St',
+      phoneNumber: '555-123-4567',
+      rating: 4.5,
+      distance: 1.2,
+      latitude: 34.0522, // Example latitude
+      longitude: -118.2437, // Example longitude
+    },
+  ];
+}
 
 // Leaflet's default icon path is not correctly configured, leading to marker errors.
 // This workaround sets the correct paths for the marker icons.
 // More info: https://github.com/Leaflet/Leaflet/issues/4968
 function setLeafletIcon() {
-  delete L.Icon.Default.prototype._getIconUrl;
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
 
   L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'leaflet/images/marker-2x.png',
