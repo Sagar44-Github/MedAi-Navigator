@@ -55,6 +55,12 @@ export default function AppointmentManagementPage() {
     });
   };
 
+  const onlineDoctorApps = [
+    {name: 'Teladoc', url: 'https://www.teladochealth.com/'},
+    {name: 'MDLIVE', url: 'https://www.mdlive.com/'},
+    {name: 'Amwell', url: 'https://www.amwell.com/'},
+  ];
+
   return (
     <div className="bg-background min-h-screen">
       <header className="bg-background py-4 shadow-sm">
@@ -134,6 +140,18 @@ export default function AppointmentManagementPage() {
                   </ul>
                 </div>
               )}
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">Online Doctor Apps:</h3>
+                <div className="flex space-x-2">
+                  {onlineDoctorApps.map(app => (
+                    <a key={app.name} href={app.url} target="_blank" rel="noopener noreferrer">
+                      <Button variant="secondary" size="sm">
+                        Consult with {app.name}
+                      </Button>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
