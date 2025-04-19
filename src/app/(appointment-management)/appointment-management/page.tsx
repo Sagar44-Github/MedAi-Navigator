@@ -61,6 +61,7 @@ export default function AppointmentManagementPage() {
     {name: 'Amwell', url: 'https://www.amwell.com/'},
     {name: 'Practo', url: 'https://www.practo.com/'},
     {name: 'Apollo 24/7', url: 'https://www.apollo247.com/'},
+    {name: 'Tata 1mg', url: 'https://www.1mg.com/'},
   ];
 
   return (
@@ -144,7 +145,7 @@ export default function AppointmentManagementPage() {
               )}
               <div className="mt-4">
                 <h3 className="text-lg font-semibold mb-2">Online Doctor Apps:</h3>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
                   {onlineDoctorApps.map(app => (
                     <a key={app.name} href={app.url} target="_blank" rel="noopener noreferrer">
                       <Button variant="secondary" size="sm">
@@ -161,4 +162,3 @@ export default function AppointmentManagementPage() {
     </div>
   );
 }
-
