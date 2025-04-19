@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import React from 'react';
 
 interface Medication {
   id: string;
@@ -121,138 +122,140 @@ export function MedicationTracker() {
   };
 
   return (
-    <div className="container mx-auto px-4">
-      <Card className="w-full max-w-lg mx-auto hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
-        <CardHeader>
-          <CardTitle>Medication Tracker</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <label htmlFor="name">Medication Name</label>
-            <Input
-              id="name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Enter medication name"
-            />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="dosage">Dosage</label>
-            <Textarea
-              id="dosage"
-              value={dosage}
-              onChange={e => setDosage(e.target.value)}
-              placeholder="Enter dosage details"
-            />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="timings">Timings (e.g., morning, afternoon)</label>
-            <Input
-              id="timings"
-              value={timings}
-              onChange={e => setTimings(e.target.value)}
-              placeholder="Enter timings"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <label htmlFor="afterFood">After Food</label>
-            <input
-              id="afterFood"
-              type="checkbox"
-              checked={afterFood}
-              onChange={e => setAfterFood(e.target.checked)}
-              className="h-5 w-5"
-            />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="durationDays">Duration (Days)</label>
-            <Input
-              id="durationDays"
-              type="number"
-              value={durationDays.toString()}
-              onChange={e => setDurationDays(Number(e.target.value))}
-              placeholder="Enter duration in days"
-            />
-          </div>
-          <div className="grid gap-2">
-            <label htmlFor="startDate">Start Date</label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={'outline'}
-                  className={cn(
-                    'w-[240px] justify-start text-left font-normal',
-                    !startDate && 'text-muted-foreground'
-                  )}
-                >
-                  {startDate ? format(startDate, 'PPP') : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 rounded-lg shadow-md" align="center" side="bottom">
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={setStartDate}
-                  disabled={date => date < new Date()}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          {editingId ? (
-            <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleUpdateMedication}>Update Medication</Button>
-          ) : (
-            <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleAddMedication}>Add Medication</Button>
-          )}
-
-          {medications.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Medication List:</h3>
-              <ul>
-                {medications.map(medication => (
-                  <li key={medication.id} className="mb-2 p-4 rounded-md shadow-sm bg-card hover:shadow-lg transition-shadow duration-300">
-                    <strong>{medication.name}</strong> - {medication.dosage}
-                    (Timings: {medication.timings}, After Food:{' '}
-                    {medication.afterFood ? 'Yes' : 'No'}, Duration:{' '}
-                    {medication.durationDays} days, Start Date:{' '}
-                    {medication.startDate ? format(medication.startDate, 'PPP') : 'Not Scheduled'})
-                    <div className="flex space-x-2 mt-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleEditMedication(medication.id)}
-                      >
-                        Edit
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="destructive" size="sm">
-                            Remove
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the medication from your list.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleRemoveMedication(medication.id)}>
-                              Continue
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                ))}
-              </ul>
+    <>
+      <div className="container mx-auto px-4">
+        <Card className="w-full max-w-lg mx-auto hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+          <CardHeader>
+            <CardTitle>Medication Tracker</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <div className="grid gap-2">
+              <label htmlFor="name">Medication Name</label>
+              <Input
+                id="name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Enter medication name"
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+            <div className="grid gap-2">
+              <label htmlFor="dosage">Dosage</label>
+              <Textarea
+                id="dosage"
+                value={dosage}
+                onChange={e => setDosage(e.target.value)}
+                placeholder="Enter dosage details"
+              />
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor="timings">Timings (e.g., morning, afternoon)</label>
+              <Input
+                id="timings"
+                value={timings}
+                onChange={e => setTimings(e.target.value)}
+                placeholder="Enter timings"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <label htmlFor="afterFood">After Food</label>
+              <input
+                id="afterFood"
+                type="checkbox"
+                checked={afterFood}
+                onChange={e => setAfterFood(e.target.checked)}
+                className="h-5 w-5"
+              />
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor="durationDays">Duration (Days)</label>
+              <Input
+                id="durationDays"
+                type="number"
+                value={durationDays.toString()}
+                onChange={e => setDurationDays(Number(e.target.value))}
+                placeholder="Enter duration in days"
+              />
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor="startDate">Start Date</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    className={cn(
+                      'w-[240px] justify-start text-left font-normal',
+                      !startDate && 'text-muted-foreground'
+                    )}
+                  >
+                    {startDate ? format(startDate, 'PPP') : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 rounded-lg shadow-md" align="center" side="bottom">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={setStartDate}
+                    disabled={date => date < new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            {editingId ? (
+              <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleUpdateMedication}>Update Medication</Button>
+            ) : (
+              <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleAddMedication}>Add Medication</Button>
+            )}
+
+            {medications.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">Medication List:</h3>
+                <ul>
+                  {medications.map(medication => (
+                    <li key={medication.id} className="mb-2 p-4 rounded-md shadow-sm bg-card hover:shadow-lg transition-shadow duration-300">
+                      <strong>{medication.name}</strong> - {medication.dosage}
+                      (Timings: {medication.timings}, After Food:{' '}
+                      {medication.afterFood ? 'Yes' : 'No'}, Duration:{' '}
+                      {medication.durationDays} days, Start Date:{' '}
+                      {medication.startDate ? format(medication.startDate, 'PPP') : 'Not Scheduled'})
+                      <div className="flex space-x-2 mt-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleEditMedication(medication.id)}
+                        >
+                          Edit
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="sm">
+                              Remove
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the medication from your list.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleRemoveMedication(medication.id)}>
+                                Continue
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }
