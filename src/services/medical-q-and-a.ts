@@ -1,3 +1,4 @@
+
 /**
  * Represents a medical question and its answer.
  */
@@ -20,7 +21,7 @@ export interface MedicalQA {
  * Asynchronously retrieves an answer to a medical question.
  *
  * @param question The medical question to answer.
- * @returns A promise that resolves to a MedicalQA object.
+ * @returns a question.
  */
 export async function getMedicalAnswer(question: string): Promise<MedicalQA> {
   // TODO: Implement this by calling an API.
