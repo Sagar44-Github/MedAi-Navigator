@@ -59,6 +59,8 @@ export default function AppointmentManagementPage() {
     {name: 'Teladoc', url: 'https://www.teladochealth.com/'},
     {name: 'MDLIVE', url: 'https://www.mdlive.com/'},
     {name: 'Amwell', url: 'https://www.amwell.com/'},
+    {name: 'Practo', url: 'https://www.practo.com/'},
+    {name: 'Apollo 24/7', url: 'https://www.apollo247.com/'},
   ];
 
   return (
@@ -159,3 +161,4 @@ export default function AppointmentManagementPage() {
     </div>
   );
 }
+
