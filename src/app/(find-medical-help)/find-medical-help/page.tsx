@@ -1,11 +1,26 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {getMedicalFacilities, MedicalFacility} from '@/services/medical-facility-locator';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {MapPin} from 'lucide-react';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Leaflet's default icon path is not correctly configured, leading to marker errors.
+// This workaround sets the correct paths for the marker icons.
+// More info: https://github.com/Leaflet/Leaflet/issues/4968
+function setLeafletIcon() {
+  delete L.Icon.Default.prototype._getIconUrl;
+
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'leaflet/images/marker-2x.png',
+    iconUrl: 'leaflet/images/marker.png',
+    shadowUrl: 'leaflet/images/marker-shadow.png',
+  });
+}
 
 export default function FindMedicalHelpPage() {
   const [location, setLocation] = useState<{lat: number; lng: number} | null>(null);
@@ -13,6 +28,13 @@ export default function FindMedicalHelpPage() {
   const [specialty, setSpecialty] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<L.Map | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -31,6 +53,41 @@ export default function FindMedicalHelpPage() {
       setError('Geolocation is not supported by your browser. Please enter your location manually.');
     }
   }, []);
+
+  // Initialize map after location is set
+  useEffect(() => {
+    if (!isClient) {
+      return;
+    }
+
+    setLeafletIcon();
+
+    if (location && mapRef.current) {
+      const newMap = L.map(mapRef.current).setView([location.lat, location.lng], 12);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(newMap);
+
+      setMap(newMap);
+    }
+
+    return () => {
+      map?.remove();
+    };
+  }, [location, isClient]);
+
+  // Add markers when facilities change
+  useEffect(() => {
+    if (map && facilities.length > 0) {
+      facilities.forEach(facility => {
+        L.marker([location?.lat ?? 0, location?.lng ?? 0])
+          .addTo(map)
+          .bindPopup(`<b>${facility.name}</b><br>${facility.address}<br>Rating: ${facility.rating}`);
+      });
+    }
+  }, [facilities, map, location]);
 
   const handleSearch = async () => {
     if (!location) {
@@ -110,10 +167,11 @@ export default function FindMedicalHelpPage() {
                       </ul>
                     </div>
                   )}
-                  {/* TODO: Implement clickable map here */}
-                  <div className="mt-4">
-                    <p>Clickable map will be implemented here in future version</p>
-                  </div>
+                  <div
+                    ref={mapRef}
+                    className="mt-4"
+                    style={{height: '400px'}}
+                  />
                 </>
               ) : (
                 <div>
