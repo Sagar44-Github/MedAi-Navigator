@@ -4,7 +4,6 @@ import {useState, useRef, useEffect} from 'react';
 import {analyzeSymptoms} from '@/ai/flows/ai-symptom-analyzer';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {Textarea} from '@/components/ui/textarea';
 import Link from 'next/link';
