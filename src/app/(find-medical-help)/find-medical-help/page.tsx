@@ -31,6 +31,7 @@ export default function FindMedicalHelpPage() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<L.Map | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(true); // Track location loading state
 
   useEffect(() => {
     setIsClient(true);
@@ -44,13 +45,16 @@ export default function FindMedicalHelpPage() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           });
+          setIsLocationLoading(false); // Location loaded successfully
         },
         () => {
           setError('Could not retrieve your location. Please enter manually.');
+          setIsLocationLoading(false); // Location loading failed
         }
       );
     } else {
       setError('Geolocation is not supported by your browser. Please enter your location manually.');
+      setIsLocationLoading(false); // Geolocation not supported
     }
   }, []);
 
@@ -141,7 +145,11 @@ export default function FindMedicalHelpPage() {
               {error && (
                 <div className="text-red-500">{error}</div>
               )}
-              {location ? (
+              {isLocationLoading ? (
+                <div>
+                  <p>Getting your location...</p>
+                </div>
+              ) : location ? (
                 <>
                   <div className="grid gap-2">
                     <label htmlFor="specialty">Specialty (optional)</label>
@@ -180,15 +188,17 @@ export default function FindMedicalHelpPage() {
                       </ul>
                     </div>
                   )}
-                  {isClient && <div
-                    ref={mapRef}
-                    className="mt-4"
-                    style={{height: '400px'}}
-                  />}
+                  {isClient && mapRef.current && (
+                    <div
+                      ref={mapRef}
+                      className="mt-4"
+                      style={{height: '400px'}}
+                    />
+                  )}
                 </>
               ) : (
                 <div>
-                  <p>Getting your location...</p>
+                  <p>Location access denied or unavailable.</p>
                 </div>
               )}
             </CardContent>
