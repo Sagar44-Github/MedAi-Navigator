@@ -9,7 +9,6 @@ import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {Textarea} from '@/components/ui/textarea';
 import Link from 'next/link';
 import {cn} from '@/lib/utils';
-import {Slider} from '@/components/ui/slider';
 import {Label} from '@/components/ui/label';
 import {
   AlertDialog,
@@ -30,69 +29,9 @@ export default function SymptomAnalysisPage() {
   const [allergies, setAllergies] = useState('');
   const [results, setResults] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [conditionLikelihood, setConditionLikelihood] = useState<number>(50); // Default value of 50%
   const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([]);
   const [isAnonymous, setIsAnonymous] = useState(false); // Track anonymous mode state
   const {toast} = useToast();
-  const audioRecorder = useRef<MediaRecorder | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
-
-  useEffect(() => {
-    const initializeRecorder = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-        audioRecorder.current = new MediaRecorder(stream);
-        audioRecorder.current.ondataavailable = handleDataAvailable;
-        audioRecorder.current.onstop = handleStop;
-      } catch (error) {
-        console.error('Error accessing microphone:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Microphone Access Denied',
-          description: 'Please enable microphone permissions in your browser settings to use voice input.',
-        });
-      }
-    };
-
-    initializeRecorder();
-
-    return () => {
-      if (audioRecorder.current) {
-        audioRecorder.current.ondataavailable = null;
-        audioRecorder.current.onstop = null;
-      }
-    };
-  }, [toast]);
-
-  const handleDataAvailable = (event: BlobEvent) => {
-    if (event.data.size > 0) {
-      setAudioChunks(prev => [...prev, event.data]);
-    }
-  };
-
-  const handleStop = () => {
-    const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
-    const audioUrl = URL.createObjectURL(audioBlob);
-    // Here you would typically upload the audioBlob to a server
-    // and transcribe it to text, then set the symptoms state.
-    console.log('Audio URL:', audioUrl);
-  };
-
-  const startRecording = () => {
-    if (audioRecorder.current && audioRecorder.current.state === "inactive") {
-      setAudioChunks([]);
-      audioRecorder.current.start();
-      setIsRecording(true);
-    }
-  };
-
-  const stopRecording = () => {
-    if (audioRecorder.current && audioRecorder.current.state === "recording") {
-      audioRecorder.current.stop();
-      setIsRecording(false);
-    }
-  };
 
   const handleAnalyze = async () => {
     setIsLoading(true);
@@ -150,10 +89,6 @@ export default function SymptomAnalysisPage() {
     }
   };
 
-  const handleLikelihoodChange = (value: number[]) => {
-    setConditionLikelihood(value[0]);
-  };
-
   return (
     <div className="bg-background min-h-screen">
       <header className="bg-background py-4 shadow-sm">
@@ -178,24 +113,6 @@ export default function SymptomAnalysisPage() {
                   onChange={e => setSymptoms(e.target.value)}
                   placeholder="Enter your symptoms (e.g., fever, cough, fatigue)"
                 />
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={startRecording}
-                    disabled={isRecording}
-                  >
-                    {isRecording ? 'Recording...' : 'Start Voice Input'}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={stopRecording}
-                    disabled={!isRecording}
-                  >
-                    Stop Voice Input
-                  </Button>
-                </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="medicalHistory">Medical History</Label>
@@ -213,15 +130,6 @@ export default function SymptomAnalysisPage() {
                   value={allergies}
                   onChange={e => setAllergies(e.target.value)}
                   placeholder="Enter your allergies"
-                />
-              </div>
-              <div className="mb-4">
-                <Label>Condition Likelihood: {conditionLikelihood}%</Label>
-                <Slider
-                  defaultValue={[conditionLikelihood]}
-                  max={100}
-                  step={1}
-                  onValueChange={handleLikelihoodChange}
                 />
               </div>
               <Button
