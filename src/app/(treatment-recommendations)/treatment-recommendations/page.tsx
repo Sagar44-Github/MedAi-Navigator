@@ -1,4 +1,6 @@
-import { TreatmentAdvisor } from "@/components/treatment-advisor";
+'use client';
+
+import {TreatmentAdvisor} from '@/components/treatment-advisor';
 
 export default function TreatmentRecommendationsPage() {
   return (

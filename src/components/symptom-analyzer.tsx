@@ -7,6 +7,7 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {Textarea} from '@/components/ui/textarea';
+import Link from 'next/link';
 
 export function SymptomAnalyzer() {
   const [symptoms, setSymptoms] = useState('');
@@ -94,6 +95,15 @@ export function SymptomAnalyzer() {
                 </li>
               ))}
             </ul>
+            <Link
+              href={`/treatment-recommendations?symptoms=${encodeURIComponent(
+                symptoms
+              )}`}
+            >
+              <Button variant="secondary">
+                Get Treatment Recommendations
+              </Button>
+            </Link>
           </div>
         )}
       </CardContent>

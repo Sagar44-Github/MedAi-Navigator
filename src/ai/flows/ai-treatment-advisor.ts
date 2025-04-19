@@ -1,4 +1,3 @@
-// ai-treatment-advisor.ts
 'use server';
 
 /**
@@ -16,12 +15,15 @@ const TreatmentAdvisorInputSchema = z.object({
   symptoms: z.string().describe('The user-reported symptoms.'),
   medicalHistory: z.string().describe('The user medical history.'),
   allergies: z.string().describe('The user allergies.'),
+  age: z.number().describe('The user age.'),
+  height: z.string().describe('The user height.'),
+  weight: z.string().describe('The user weight.'),
 });
 
 export type TreatmentAdvisorInput = z.infer<typeof TreatmentAdvisorInputSchema>;
 
 const TreatmentAdvisorOutputSchema = z.object({
-  recommendations: z.string().describe('The personalized treatment recommendations.'),
+  prescription: z.string().describe('The personalized treatment prescription with medication details.'),
   confidenceLevel: z.number().describe('The confidence level of the recommendations (0-1).'),
   disclaimer: z.string().describe('A disclaimer that the AI advice is not a substitute for professional medical care.'),
 });
@@ -39,22 +41,28 @@ const treatmentAdvisorPrompt = ai.definePrompt({
       symptoms: z.string().describe('The user-reported symptoms.'),
       medicalHistory: z.string().describe('The user medical history.'),
       allergies: z.string().describe('The user allergies.'),
+      age: z.number().describe('The user age.'),
+      height: z.string().describe('The user height.'),
+      weight: z.string().describe('The user weight.'),
     }),
   },
   output: {
     schema: z.object({
-      recommendations: z.string().describe('The personalized treatment recommendations.'),
-    confidenceLevel: z.number().describe('The confidence level of the recommendations (0-1).'),
-    disclaimer: z.string().describe('A disclaimer that the AI advice is not a substitute for professional medical care.'),
-  }),
+      prescription: z.string().describe('The personalized treatment prescription with medication details including dosage, timing, and dietary considerations.'),
+      confidenceLevel: z.number().describe('The confidence level of the recommendations (0-1).'),
+      disclaimer: z.string().describe('A disclaimer that the AI advice is not a substitute for professional medical care.'),
+    }),
   },
-  prompt: `You are an AI treatment advisor. Based on the user's symptoms, medical history, and allergies, provide personalized treatment recommendations.
+  prompt: `You are an AI treatment advisor. Based on the user's symptoms, medical history, allergies, age, height and weight, provide a detailed and personalized treatment prescription including medication names, dosages, timing (before or after food), and any dietary considerations.
 
 Symptoms: {{{symptoms}}}
 Medical History: {{{medicalHistory}}}
 Allergies: {{{allergies}}}
+Age: {{{age}}}
+Height: {{{height}}}
+Weight: {{{weight}}}
 
-Provide treatment recommendations, a confidence level (0-1), and a disclaimer that AI advice is not a substitute for professional medical care.`, // Modified prompt here
+Provide a detailed treatment prescription, a confidence level (0-1), and a disclaimer that AI advice is not a substitute for professional medical care. The prescription should resemble a real-world doctor's prescription.`,
 });
 
 const treatmentAdvisorFlow = ai.defineFlow<
