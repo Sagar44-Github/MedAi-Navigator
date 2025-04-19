@@ -5,8 +5,7 @@ import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {MapPin} from 'lucide-react';
-import 'leaflet/dist/leaflet.css';
-import * as L from 'leaflet';
+import type * as L from 'leaflet';
 
 /**
  * Represents a medical facility.
@@ -72,6 +71,10 @@ export async function getMedicalFacilities(
 // This workaround sets the correct paths for the marker icons.
 // More info: https://github.com/Leaflet/Leaflet/issues/4968
 function setLeafletIcon() {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   delete (L.Icon.Default.prototype as any)._getIconUrl;
 
   L.Icon.Default.mergeOptions({
@@ -125,16 +128,25 @@ export default function FindMedicalHelpPage() {
 
     setLeafletIcon();
 
-    if (location && mapRef.current) {
-      const newMap = L.map(mapRef.current).setView([location.lat, location.lng], 12);
+    const initializeMap = async () => {
+      if (location && mapRef.current) {
+        try {
+          const L = await import('leaflet') as typeof L;
+          const newMap = L.map(mapRef.current).setView([location.lat, location.lng], 12);
 
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(newMap);
+          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          }).addTo(newMap);
 
-      setMap(newMap);
-    }
+          setMap(newMap);
+        } catch (error) {
+          console.error('Failed to initialize leaflet map', error);
+        }
+      }
+    };
+
+    initializeMap();
 
     return () => {
       map?.remove();
@@ -152,9 +164,10 @@ export default function FindMedicalHelpPage() {
       });
 
       facilities.forEach(facility => {
-        L.marker([facility.latitude, facility.longitude])
-          .addTo(map)
-          .bindPopup(`<b>${facility.name}</b><br>${facility.address}<br>Rating: ${facility.rating}`);
+        if (map) {
+          const marker = (L as any).marker([facility.latitude, facility.longitude]).addTo(map);
+          marker.bindPopup(`<b>${facility.name}</b><br>${facility.address}<br>Rating: ${facility.rating}`);
+        }
       });
     }
   }, [facilities, map]);
