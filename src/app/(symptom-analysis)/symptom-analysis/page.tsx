@@ -33,6 +33,61 @@ export default function SymptomAnalysisPage() {
   const [isAnonymous, setIsAnonymous] = useState(false); // Track anonymous mode state
   const {toast} = useToast();
 
+  // Voice Recognition
+  const [isListening, setIsListening] = useState(false);
+  const recognition = useRef<SpeechRecognition | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition =
+        window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognition.current = new SpeechRecognition();
+        recognition.current.continuous = true;
+        recognition.current.interimResults = true;
+        recognition.current.onresult = event => {
+          const transcript = Array.from(event.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+          setSymptoms(transcript);
+        };
+        recognition.current.onstart = () => setIsListening(true);
+        recognition.current.onend = () => setIsListening(false);
+        recognition.current.onerror = event => {
+          console.error('Speech recognition error', event.error);
+          setIsListening(false);
+          toast({
+            title: 'Voice Input Error',
+            description: `Error occurred during voice recognition: ${event.error}`,
+          });
+        };
+      } else {
+        toast({
+          title: 'Voice Input Not Supported',
+          description:
+            'Your browser does not support voice input. Please use a supported browser like Chrome or Safari.',
+        });
+      }
+    }
+  }, [toast]);
+
+  const handleStartStopListening = () => {
+    if (!recognition.current) {
+      toast({
+        title: 'Voice Input Not Available',
+        description: 'Voice input is not available in your browser.',
+      });
+      return;
+    }
+
+    if (isListening) {
+      recognition.current.stop();
+    } else {
+      recognition.current.start();
+    }
+  };
+
   const handleAnalyze = async () => {
     setIsLoading(true);
     try {
@@ -107,12 +162,22 @@ export default function SymptomAnalysisPage() {
             <CardContent className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="symptoms">Symptoms</Label>
-                <Textarea
-                  id="symptoms"
-                  value={symptoms}
-                  onChange={e => setSymptoms(e.target.value)}
-                  placeholder="Enter your symptoms (e.g., fever, cough, fatigue)"
-                />
+                <div className="relative">
+                  <Textarea
+                    id="symptoms"
+                    value={symptoms}
+                    onChange={e => setSymptoms(e.target.value)}
+                    placeholder="Enter your symptoms (e.g., fever, cough, fatigue)"
+                  />
+                  <Button
+                    variant="outline"
+                    className="absolute right-2 bottom-2 h-8 w-8 rounded-full p-0"
+                    onClick={handleStartStopListening}
+                    disabled={!recognition.current}
+                  >
+                    {isListening ? 'Stop Voice Input' : 'Start Voice Input'}
+                  </Button>
+                </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="medicalHistory">Medical History</Label>
@@ -241,3 +306,4 @@ export default function SymptomAnalysisPage() {
     </div>
   );
 }
+
