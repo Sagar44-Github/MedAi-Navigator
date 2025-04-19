@@ -8,9 +8,9 @@ import {Input} from '@/components/ui/input';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {Textarea} from '@/components/ui/textarea';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import {cn} from '@/lib/utils';
 
-export function SymptomAnalyzer() {
+export default function SymptomAnalysisPage() {
   const [symptoms, setSymptoms] = useState('');
   const [medicalHistory, setMedicalHistory] = useState('');
   const [allergies, setAllergies] = useState('');
@@ -81,17 +81,24 @@ export function SymptomAnalyzer() {
                   placeholder="Enter your allergies"
                 />
               </div>
-              <Button className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold" onClick={handleAnalyze} disabled={isLoading}>
+              <Button
+                className="transition-colors duration-300 bg-primary text-primary-foreground hover:bg-primary/80 rounded-md py-2 px-4 font-semibold"
+                onClick={handleAnalyze}
+                disabled={isLoading}
+              >
                 {isLoading ? 'Analyzing...' : 'Analyze Symptoms'}
               </Button>
 
               {results && results.conditions && (
                 <div className="mt-4">
-                  <Alert variant="destructive" className="bg-red-100 border border-red-500 text-red-700 rounded-md p-4">
+                  <Alert
+                    variant="destructive"
+                    className="bg-red-100 border border-red-500 text-red-700 rounded-md p-4"
+                  >
                     <AlertTitle>AI Analysis</AlertTitle>
                     <AlertDescription>
-                      This information is AI-generated and should not be considered a
-                      substitute for professional medical advice.
+                      This information is AI-generated and should not be
+                      considered a substitute for professional medical advice.
                     </AlertDescription>
                   </Alert>
                   <h3 className="text-lg font-semibold mt-4 mb-2">
@@ -99,7 +106,10 @@ export function SymptomAnalyzer() {
                   </h3>
                   <ul>
                     {results.conditions.map((condition: any, index: number) => (
-                      <li key={index} className="mb-2 p-4 rounded-md shadow-sm bg-card">
+                      <li
+                        key={index}
+                        className="mb-2 p-4 rounded-md shadow-sm bg-card"
+                      >
                         <strong>{condition.condition}</strong> (Confidence:{' '}
                         {Math.round(condition.confidence * 100)}%)
                         <p>Recommendations: {condition.recommendations}</p>
@@ -111,7 +121,10 @@ export function SymptomAnalyzer() {
                       symptoms
                     )}`}
                   >
-                    <Button variant="secondary" className="transition-colors duration-300 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md py-2 px-4 font-semibold">
+                    <Button
+                      variant="secondary"
+                      className="transition-colors duration-300 bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md py-2 px-4 font-semibold"
+                    >
                       Get Treatment Recommendations
                     </Button>
                   </Link>
