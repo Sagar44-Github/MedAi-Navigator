@@ -7,7 +7,7 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {useSearchParams} from 'next/navigation';
 
-export function TreatmentAdvisor() {
+export default function TreatmentAdvisor() {
   const searchParams = useSearchParams();
   const symptomsFromParams = searchParams.get('symptoms') || '';
 
