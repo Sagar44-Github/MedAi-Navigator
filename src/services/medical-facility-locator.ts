@@ -22,6 +22,14 @@ export interface MedicalFacility {
    * The distance of the medical facility from the user.
    */
   distance: number;
+    /**
+   * The latitude of the medical facility.
+   */
+  latitude: number;
+  /**
+   * The longitude of the medical facility.
+   */
+  longitude: number;
 }
 
 /**
@@ -44,6 +52,8 @@ export async function getMedicalFacilities(
       phoneNumber: '555-123-4567',
       rating: 4.5,
       distance: 1.2,
+      latitude: 34.0522, // Example latitude
+      longitude: -118.2437, // Example longitude
     },
   ];
 }

@@ -81,13 +81,20 @@ export default function FindMedicalHelpPage() {
   // Add markers when facilities change
   useEffect(() => {
     if (map && facilities.length > 0) {
+      // Clear existing markers
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+
       facilities.forEach(facility => {
-        L.marker([location?.lat ?? 0, location?.lng ?? 0])
+        L.marker([facility.latitude, facility.longitude])
           .addTo(map)
           .bindPopup(`<b>${facility.name}</b><br>${facility.address}<br>Rating: ${facility.rating}`);
       });
     }
-  }, [facilities, map, location]);
+  }, [facilities, map]);
 
   const handleSearch = async () => {
     if (!location) {
@@ -100,7 +107,13 @@ export default function FindMedicalHelpPage() {
 
     try {
       const data = await getMedicalFacilities(location, specialty);
-      setFacilities(data);
+       // Simulate adding latitude and longitude to the facilities
+      const facilitiesWithLatLng = data.map(facility => ({
+        ...facility,
+        latitude: location.lat + (Math.random() - 0.5) * 0.1, // Adding some random offset
+        longitude: location.lng + (Math.random() - 0.5) * 0.1, // Adding some random offset
+      }));
+      setFacilities(facilitiesWithLatLng);
     } catch (err: any) {
       console.error('Error fetching medical facilities:', err);
       setError('Failed to fetch medical facilities. Please try again.');
@@ -167,11 +180,11 @@ export default function FindMedicalHelpPage() {
                       </ul>
                     </div>
                   )}
-                  <div
+                  {isClient && <div
                     ref={mapRef}
                     className="mt-4"
                     style={{height: '400px'}}
-                  />
+                  />}
                 </>
               ) : (
                 <div>
