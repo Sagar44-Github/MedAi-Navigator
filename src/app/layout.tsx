@@ -1,16 +1,23 @@
-import type {Metadata} from 'next';
-import {Roboto} from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const roboto = Roboto({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: 'HealthWise AI',
-  description: 'Your AI-powered health companion',
+  title: "MedAi Navigator",
+  description:
+    "Your AI-powered medical assistant that provides comprehensive healthcare guidance.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -19,9 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.className}>
-      <body>{children}</body>
+    <html lang="en">
+      <body
+        className={`${roboto.className} bg-background text-foreground min-h-screen`}
+      >
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }
-
