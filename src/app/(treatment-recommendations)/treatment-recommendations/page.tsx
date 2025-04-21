@@ -319,7 +319,7 @@ export default function TreatmentAdvisor() {
               <div className="relative h-10 w-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
                 <Pill className="h-6 w-6 text-white transition-transform group-hover:scale-110" />
               </div>
-              MedAi Navigator
+            MedAi Navigator
             </Link>
 
             <div className="flex items-center">
@@ -367,13 +367,13 @@ export default function TreatmentAdvisor() {
                       Symptoms
                     </Label>
                     <Textarea
-                      id="symptoms"
-                      value={symptoms}
+                  id="symptoms"
+                  value={symptoms}
                       onChange={(e) => setSymptoms(e.target.value)}
-                      placeholder="Enter your symptoms"
+                  placeholder="Enter your symptoms"
                       className="min-h-[120px] bg-black/20 border-white/10 focus:border-[#FFD700] rounded-xl transition-all focus:ring-1 focus:ring-[#FFD700] p-4"
-                    />
-                  </div>
+                />
+              </div>
 
                   <div>
                     <Label
@@ -384,13 +384,13 @@ export default function TreatmentAdvisor() {
                       Medical History
                     </Label>
                     <Textarea
-                      id="medicalHistory"
-                      value={medicalHistory}
+                  id="medicalHistory"
+                  value={medicalHistory}
                       onChange={(e) => setMedicalHistory(e.target.value)}
-                      placeholder="Enter your medical history"
+                  placeholder="Enter your medical history"
                       className="min-h-[100px] bg-black/20 border-white/10 focus:border-[#FFD700] rounded-xl transition-all focus:ring-1 focus:ring-[#FFD700] p-4"
-                    />
-                  </div>
+                />
+              </div>
 
                   <div>
                     <Label
@@ -401,41 +401,41 @@ export default function TreatmentAdvisor() {
                       Allergies
                     </Label>
                     <Textarea
-                      id="allergies"
-                      value={allergies}
+                  id="allergies"
+                  value={allergies}
                       onChange={(e) => setAllergies(e.target.value)}
-                      placeholder="Enter your allergies"
+                  placeholder="Enter your allergies"
                       className="min-h-[100px] bg-black/20 border-white/10 focus:border-[#FFD700] rounded-xl transition-all focus:ring-1 focus:ring-[#FFD700] p-4"
-                    />
-                  </div>
+                />
+              </div>
 
                   {/* Personal Details Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                     <div>
                       <Label htmlFor="age">Age</Label>
-                      <Input
-                        id="age"
-                        value={age}
+                <Input
+                  id="age"
+                  value={age}
                         onChange={(e) => setAge(e.target.value)}
                         placeholder="e.g. 35"
                         className="mt-1 bg-black/20 border-white/10 focus:border-[#FFD700]"
-                      />
-                    </div>
+                />
+              </div>
                     <div>
                       <Label htmlFor="height">Height</Label>
-                      <Input
-                        id="height"
-                        value={height}
+                <Input
+                  id="height"
+                  value={height}
                         onChange={(e) => setHeight(e.target.value)}
                         placeholder="e.g. 175 cm"
                         className="mt-1 bg-black/20 border-white/10 focus:border-[#FFD700]"
-                      />
-                    </div>
+                />
+              </div>
                     <div>
                       <Label htmlFor="weight">Weight</Label>
-                      <Input
-                        id="weight"
-                        value={weight}
+                <Input
+                  id="weight"
+                  value={weight}
                         onChange={(e) => setWeight(e.target.value)}
                         placeholder="e.g. 70 kg"
                         className="mt-1 bg-black/20 border-white/10 focus:border-[#FFD700]"
